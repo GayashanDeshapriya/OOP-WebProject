@@ -294,8 +294,8 @@
     <div class="container">
         <div class="profile-card">
             <div class="profile-header">
-                <div class="profile-avatar"><%= user.getName().substring(0, 1).toUpperCase() %></div>
-                <div class="profile-name"><%= user.getName() %></div>
+                <div class="profile-avatar"><%= user.getfirstName().substring(0, 1).toUpperCase() %></div>
+                <div class="profile-name"><%= user.getfirstName() %></div>
                 <div class="profile-email"><%= user.getEmail() %></div>
             </div>
 
@@ -309,7 +309,7 @@
                         </div>
                         <div class="info-item">
                             <div class="info-label">Full Name</div>
-                            <div class="info-value"><%= user.getName() %></div>
+                            <div class="info-value"><%= user.getfirstName() %></div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Email Address</div>
@@ -317,7 +317,7 @@
                         </div>
                         <div class="info-item">
                             <div class="info-label">Country</div>
-                            <div class="info-value"><%= user.getCountry() %></div>
+                            <div class="info-value"><%= user.getlastName() %></div>
                         </div>
                     </div>
                 </div>

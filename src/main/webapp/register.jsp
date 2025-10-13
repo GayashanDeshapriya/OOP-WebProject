@@ -256,9 +256,9 @@
             <h1>Create Account</h1>
             <p>Join us today and get started</p>
         </div>
-        
+
         <div class="register-body">
-            <% 
+            <%
                 String errorMessage = (String) request.getAttribute("errorMessage");
                 if (errorMessage != null) {
             %>
@@ -266,68 +266,76 @@
                     <%= errorMessage %>
                 </div>
             <% } %>
-            
+
             <form action="auth" method="post" onsubmit="return validateForm()">
                 <input type="hidden" name="action" value="register">
-                
+
                 <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" 
-                           placeholder="Enter your full name" 
-                           value="<%= request.getAttribute("name") != null ? request.getAttribute("name") : "" %>"
+                    <label for="name">First Name</label>
+                    <input type="text" id="fname" name="fname"
+                           placeholder="Enter your first name"
+                           value="<%= request.getAttribute("fname") != null ? request.getAttribute("fname") : "" %>"
                            required>
                 </div>
-                
+
+                <div class="form-group">
+                    <label for="name">Last Name</label>
+                    <input type="text" id="lname" name="lname"
+                           placeholder="Enter your last name"
+                           value="<%= request.getAttribute("lname") != null ? request.getAttribute("lname") : "" %>"
+                           required>
+                </div>
+
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" 
-                           placeholder="Enter your email" 
+                    <input type="email" id="email" name="email"
+                           placeholder="Enter your email"
                            value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>"
                            required>
                 </div>
-                
-                <div class="form-group">
-                    <label for="country">Country</label>
-                    <select id="country" name="country" required>
-                        <option value="">Select your country</option>
-                        <option value="Sri Lanka" <%= "Sri Lanka".equals(request.getAttribute("country")) ? "selected" : "" %>>Sri Lanka</option>
-                        <option value="India" <%= "India".equals(request.getAttribute("country")) ? "selected" : "" %>>India</option>
-                        <option value="USA" <%= "USA".equals(request.getAttribute("country")) ? "selected" : "" %>>United States</option>
-                        <option value="UK" <%= "UK".equals(request.getAttribute("country")) ? "selected" : "" %>>United Kingdom</option>
-                        <option value="Canada" <%= "Canada".equals(request.getAttribute("country")) ? "selected" : "" %>>Canada</option>
-                        <option value="Australia" <%= "Australia".equals(request.getAttribute("country")) ? "selected" : "" %>>Australia</option>
-                        <option value="Germany" <%= "Germany".equals(request.getAttribute("country")) ? "selected" : "" %>>Germany</option>
-                        <option value="France" <%= "France".equals(request.getAttribute("country")) ? "selected" : "" %>>France</option>
-                        <option value="Japan" <%= "Japan".equals(request.getAttribute("country")) ? "selected" : "" %>>Japan</option>
-                        <option value="Other" <%= "Other".equals(request.getAttribute("country")) ? "selected" : "" %>>Other</option>
-                    </select>
-                </div>
-                
+
+<!--                 <div class="form-group"> -->
+<!--                     <label for="country">Country</label> -->
+<!--                     <select id="country" name="country" required> -->
+<!--                         <option value="">Select your country</option> -->
+<%--                         <option value="Sri Lanka" <%= "Sri Lanka".equals(request.getAttribute("country")) ? "selected" : "" %>>Sri Lanka</option> --%>
+<%--                         <option value="India" <%= "India".equals(request.getAttribute("country")) ? "selected" : "" %>>India</option> --%>
+<%--                         <option value="USA" <%= "USA".equals(request.getAttribute("country")) ? "selected" : "" %>>United States</option> --%>
+<%--                         <option value="UK" <%= "UK".equals(request.getAttribute("country")) ? "selected" : "" %>>United Kingdom</option> --%>
+<%--                         <option value="Canada" <%= "Canada".equals(request.getAttribute("country")) ? "selected" : "" %>>Canada</option> --%>
+<%--                         <option value="Australia" <%= "Australia".equals(request.getAttribute("country")) ? "selected" : "" %>>Australia</option> --%>
+<%--                         <option value="Germany" <%= "Germany".equals(request.getAttribute("country")) ? "selected" : "" %>>Germany</option> --%>
+<%--                         <option value="France" <%= "France".equals(request.getAttribute("country")) ? "selected" : "" %>>France</option> --%>
+<%--                         <option value="Japan" <%= "Japan".equals(request.getAttribute("country")) ? "selected" : "" %>>Japan</option> --%>
+<%--                         <option value="Other" <%= "Other".equals(request.getAttribute("country")) ? "selected" : "" %>>Other</option> --%>
+<!--                     </select> -->
+<!--                 </div> -->
+
                 <div class="form-group password-toggle">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" 
-                           placeholder="Create a password" 
+                    <input type="password" id="password" name="password"
+                           placeholder="Create a password"
                            oninput="checkPasswordStrength()" required>
                     <button type="button" class="toggle-btn" onclick="togglePassword('password')">👁️</button>
                     <div class="password-strength" id="passwordStrength">
                         <div class="password-strength-bar"></div>
                     </div>
                 </div>
-                
+
                 <div class="form-group password-toggle">
                     <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" 
+                    <input type="password" id="confirmPassword" name="confirmPassword"
                            placeholder="Confirm your password" required>
                     <button type="button" class="toggle-btn" onclick="togglePassword('confirmPassword')">👁️</button>
                 </div>
-                
+
                 <button type="submit" class="btn-register">Create Account</button>
             </form>
-            
+
             <div class="divider">
                 <span>OR</span>
             </div>
-            
+
             <div class="login-link">
                 Already have an account? <a href="login.jsp">Sign In</a>
             </div>
@@ -338,7 +346,7 @@
         function togglePassword(fieldId) {
             var passwordField = document.getElementById(fieldId);
             var toggleBtn = event.target;
-            
+
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 toggleBtn.textContent = '🙈';
@@ -351,21 +359,21 @@
         function checkPasswordStrength() {
             var password = document.getElementById('password').value;
             var strengthBar = document.getElementById('passwordStrength');
-            
+
             if (password.length === 0) {
                 strengthBar.style.display = 'none';
                 strengthBar.className = 'password-strength';
                 return;
             }
-            
+
             strengthBar.style.display = 'block';
-            
+
             var strength = 0;
             if (password.length >= 8) strength++;
             if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
             if (password.match(/[0-9]/)) strength++;
             if (password.match(/[^a-zA-Z0-9]/)) strength++;
-            
+
             strengthBar.className = 'password-strength';
             if (strength <= 2) {
                 strengthBar.classList.add('weak');
@@ -377,19 +385,20 @@
         }
 
         function validateForm() {
+        	debugger;
             var password = document.getElementById('password').value;
             var confirmPassword = document.getElementById('confirmPassword').value;
-            
+
             if (password !== confirmPassword) {
                 alert('Passwords do not match!');
                 return false;
             }
-            
+
             if (password.length < 6) {
                 alert('Password must be at least 6 characters long!');
                 return false;
             }
-            
+
             return true;
         }
     </script>

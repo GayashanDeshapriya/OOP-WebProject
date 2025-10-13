@@ -8,7 +8,7 @@
         response.sendRedirect("login.jsp");
         return;
     }
-    
+
     List<User> listUser = (List<User>) request.getAttribute("listUser");
 %>
 <!DOCTYPE html>
@@ -343,12 +343,12 @@
         <% if (listUser != null && !listUser.isEmpty()) { %>
             <div class="users-grid" id="usersGrid">
                 <% for (User user : listUser) { %>
-                    <div class="user-card" data-name="<%= user.getName().toLowerCase() %>" data-email="<%= user.getEmail().toLowerCase() %>">
+                    <div class="user-card" data-name="<%= user.getfirstName().toLowerCase() %>" data-email="<%= user.getEmail().toLowerCase() %>">
                         <div class="user-header">
-                            <div class="user-avatar"><%= user.getName().substring(0, 1).toUpperCase() %></div>
+                            <div class="user-avatar"><%= user.getfirstName().substring(0, 1).toUpperCase() %></div>
                             <div class="user-info">
                                 <div class="user-name">
-                                    <%= user.getName() %>
+                                    <%= user.getfirstName() %>
                                     <% if (currentUser.getId() == user.getId()) { %>
                                         <span class="current-user-badge">YOU</span>
                                     <% } %>
@@ -364,15 +364,15 @@
                             </div>
                             <div class="detail-item">
                                 <span class="detail-icon">🌍</span>
-                                <span><%= user.getCountry() %></span>
+                                <span><%= user.getlastName() %></span>
                             </div>
                         </div>
 
                         <div class="user-actions">
                             <a href="edit?id=<%= user.getId() %>" class="btn btn-edit">✏️ Edit</a>
-                            <a href="delete?id=<%= user.getId() %>" 
-                               class="btn btn-delete" 
-                               onclick="return confirm('Are you sure you want to delete <%= user.getName() %>?')">
+                            <a href="delete?id=<%= user.getId() %>"
+                               class="btn btn-delete"
+                               onclick="return confirm('Are you sure you want to delete <%= user.getfirstName() %>?')">
                                🗑️ Delete
                             </a>
                         </div>
@@ -397,7 +397,7 @@
             cards.forEach(card => {
                 const name = card.getAttribute('data-name');
                 const email = card.getAttribute('data-email');
-                
+
                 if (name.includes(filter) || email.includes(filter)) {
                     card.style.display = '';
                 } else {

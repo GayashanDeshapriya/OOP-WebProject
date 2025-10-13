@@ -69,17 +69,17 @@ public class AuthController extends HttpServlet {
     private void registerUser(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        String name = request.getParameter("name");
+        String firstname = request.getParameter("fname");
+        String lastname = request.getParameter("lname");
         String email = request.getParameter("email");
-        String country = request.getParameter("country");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
         // Validation
-        if (name == null || name.trim().isEmpty() ||
+        if (firstname == null || firstname.trim().isEmpty() ||
+        	lastname == null || lastname.trim().isEmpty() ||
             email == null || email.trim().isEmpty() ||
-            password == null || password.trim().isEmpty() ||
-            country == null || country.trim().isEmpty()) {
+            password == null || password.trim().isEmpty() ) {
 
             request.setAttribute("errorMessage", "All fields are required!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
@@ -88,23 +88,23 @@ public class AuthController extends HttpServlet {
 
         if (!password.equals(confirmPassword)) {
             request.setAttribute("errorMessage", "Passwords do not match!");
-            request.setAttribute("name", name);
+            request.setAttribute("name", firstname);
+            request.setAttribute("name", lastname);
             request.setAttribute("email", email);
-            request.setAttribute("country", country);
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
         if (userDAO.emailExists(email)) {
             request.setAttribute("errorMessage", "Email already registered!");
-            request.setAttribute("name", name);
-            request.setAttribute("country", country);
+            request.setAttribute("name", firstname);
+            request.setAttribute("name", lastname);
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
         // Create new user
-        User newUser = new User(name, email, country, password);
+        User newUser = new User(firstname, lastname, email, password);
         userDAO.insertUser(newUser);
 
         // Set success message and redirect to login
@@ -136,7 +136,8 @@ public class AuthController extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
-            session.setAttribute("userName", user.getName());
+            session.setAttribute("userName", user.getfirstName());
+            session.setAttribute("userName", user.getlastName());
             session.setAttribute("userEmail", user.getEmail());
 
             response.sendRedirect("dashboard.jsp");

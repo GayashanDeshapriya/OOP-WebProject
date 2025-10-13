@@ -2,52 +2,58 @@ package com.OOPWebProject.model;
 
 public class User {
     private int id;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
-    private String country;
     private String password;
 
     public User() {}
 
-    public User(int id, String name, String email, String country) {
+    public User(int id, String firstName,String lastName, String email) {
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.country = country;
+        
     }
 
-    public User(String name, String email, String country) {
-        this.name = name;
+    public User(String firstName, String email) {
+    	this.firstName=firstName;
         this.email = email;
-        this.country = country;
+        
     }
     
-    public User(String name, String email, String country, String password) {
-        this.name = name;
+    public User(String firstName, String email,String password) {
+    	this.firstName=firstName;
         this.email = email;
-        this.country = country;
         this.password = password;
     }
     
-    public User(int id, String name, String email, String country, String password) {
+    public User(int id, String firstName, String email, String country, String password) {
         this.id = id;
-        this.name = name;
-        this.email = email;
-        this.country = country;
+        this.firstName=firstName;
+        this.email = email;        
         this.password = password;
     }
 
-    public int getId() { return id; }
+    public User(String firstName, String lastName, String email, String password) {
+    	this.firstName=firstName;
+    	this.lastName=lastName;
+        this.email = email;
+        this.password = password;
+	}
+
+	public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getfirstName() { return firstName; }
+    public void setfirstName(String firstName) { this.firstName = firstName; }
 
+    public String getlastName() { return lastName; }
+    public void setlastName(String lastName) { this.lastName = lastName; }
+    
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-
-    public String getCountry() { return country; }
-    public void setCountry(String country) { this.country = country; }
     
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }

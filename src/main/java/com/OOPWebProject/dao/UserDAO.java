@@ -3,26 +3,34 @@ package com.OOPWebProject.dao;
 import java.sql.*;
 import java.util.*;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.OOPWebProject.model.User;
 import com.OOPWebProject.util.DBUtil;
 
 public class UserDAO {
 
-    private static final String INSERT_USER_SQL = "INSERT INTO users (name, email, country, password) VALUES (?, ?, ?, ?)";
-    private static final String SELECT_USER_BY_ID = "SELECT id, name, email, country, password FROM users WHERE id = ?";
+	private static final String INSERT_USER_SQL =
+		    "INSERT INTO Users (FirstName, LastName, Email, Password) VALUES (?, ?, ?, ?)";
+
+    private static final String SELECT_USER_BY_ID = "SELECT id, firstname,lastname, email FROM users WHERE id = ?";
     private static final String SELECT_ALL_USERS = "SELECT * FROM users";
     private static final String DELETE_USER_SQL = "DELETE FROM users WHERE id = ?";
     private static final String UPDATE_USER_SQL = "UPDATE users SET name = ?, email = ?, country = ? WHERE id = ?";
-    private static final String SELECT_USER_BY_EMAIL = "SELECT id, name, email, country, password FROM users WHERE email = ?";
-    private static final String VALIDATE_USER_SQL = "SELECT id, name, email, country, password FROM users WHERE email = ? AND password = ?";
+
+    private static final String SELECT_USER_BY_EMAIL = "SELECT FirstName, LastName, Email, Password FROM users WHERE email = ?";
+
+    private static final String VALIDATE_USER_SQL =
+    	    "SELECT Id, FirstName, LastName, Email, Password FROM Users WHERE Email = ?";
+
 
     public void insertUser(User user) {
         try (Connection con = DBUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(INSERT_USER_SQL)) {
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getCountry());
-            ps.setString(4, user.getPassword());
+        	ps.setString(1, user.getfirstName());
+        	ps.setString(2, user.getlastName());
+        	ps.setString(3, user.getEmail());
+            ps.setString(4, BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -37,9 +45,9 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 user = new User(
-                    rs.getInt("id"), 
-                    rs.getString("name"), 
-                    rs.getString("email"), 
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
                     rs.getString("country"),
                     rs.getString("password")
                 );
@@ -57,9 +65,9 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 users.add(new User(
-                    rs.getInt("id"), 
-                    rs.getString("name"), 
-                    rs.getString("email"), 
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
                     rs.getString("country"),
                     rs.getString("password")
                 ));
@@ -86,9 +94,9 @@ public class UserDAO {
         boolean rowUpdated = false;
         try (Connection con = DBUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(UPDATE_USER_SQL)) {
-            ps.setString(1, user.getName());
+            ps.setString(1, user.getfirstName());
+            ps.setString(3, user.getlastName());
             ps.setString(2, user.getEmail());
-            ps.setString(3, user.getCountry());
             ps.setInt(4, user.getId());
             rowUpdated = ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -96,30 +104,31 @@ public class UserDAO {
         }
         return rowUpdated;
     }
-    
+
     // Authentication methods
     public User validateUser(String email, String password) {
         User user = null;
         try (Connection con = DBUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(VALIDATE_USER_SQL)) {
             ps.setString(1, email);
-            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                user = new User(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getString("country"),
-                    rs.getString("password")
-                );
-            }
+				String storedHash = rs.getString("Password");
+				if (BCrypt.checkpw(password, storedHash)) {
+					user = new User(
+						rs.getInt("Id"),
+						rs.getString("FirstName"),
+						rs.getString("LastName"),
+						rs.getString("Email")
+					);
+				}
+			}
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return user;
     }
-    
+
     public boolean emailExists(String email) {
         try (Connection con = DBUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(SELECT_USER_BY_EMAIL)) {

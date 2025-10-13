@@ -5,13 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBUtil {
-    private static final String URL = "jdbc:mysql://localhost:3306/oop_project_db?useSSL=false&serverTimezone=UTC";
-    private static final String USER = "admin";
-    private static final String PASS = "admin123";
+    // Correct JDBC URL format for MS SQL Server
+    private static final String URL = "jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=oop_project_db;encrypt=false;trustServerCertificate=true";
+    private static final String USER = "sa";
+    private static final String PASS = "12345";
 
     static {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // Connector/J 8.x
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

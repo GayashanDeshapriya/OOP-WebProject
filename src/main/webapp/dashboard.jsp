@@ -307,9 +307,9 @@
             <div class="navbar-brand">🚀 OOP Web Project</div>
             <div class="navbar-user">
                 <div class="user-info">
-                    <div class="user-avatar"><%= user.getName().substring(0, 1).toUpperCase() %></div>
+                    <div class="user-avatar"><%= user.getfirstName().substring(0, 1).toUpperCase() %></div>
                     <div class="user-details">
-                        <div class="user-name"><%= user.getName() %></div>
+                        <div class="user-name"><%= user.getfirstName() %></div>
                         <div class="user-email"><%= user.getEmail() %></div>
                     </div>
                 </div>
@@ -320,7 +320,7 @@
 
     <div class="container">
         <div class="welcome-section">
-            <h1>Welcome back, <%= user.getName() %>! 👋</h1>
+            <h1>Welcome back, <%= user.getfirstName() %>! 👋</h1>
             <p>Here's what's happening with your account today.</p>
         </div>
 
@@ -330,13 +330,6 @@
                 <div class="stat-title">Account Status</div>
                 <div class="stat-value">Active</div>
             </div>
-
-            <div class="stat-card pink">
-                <div class="stat-icon">🌍</div>
-                <div class="stat-title">Location</div>
-                <div class="stat-value"><%= user.getCountry() %></div>
-            </div>
-
             <div class="stat-card green">
                 <div class="stat-icon">📧</div>
                 <div class="stat-title">Email Verified</div>

@@ -7,7 +7,7 @@
         response.sendRedirect("login.jsp");
         return;
     }
-    
+
     User user = (User) request.getAttribute("user");
     boolean isEdit = (user != null);
 %>
@@ -257,42 +257,26 @@
 
                     <div class="form-group">
                         <label for="name">Full Name <span class="required">*</span></label>
-                        <input type="text" id="name" name="name" 
-                               placeholder="Enter full name" 
-                               value="<%= isEdit ? user.getName() : "" %>"
+                        <input type="text" id="name" name="name"
+                               placeholder="Enter full name"
+                               value="<%= isEdit ? user.getfirstName() : "" %>"
                                required>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email Address <span class="required">*</span></label>
-                        <input type="email" id="email" name="email" 
-                               placeholder="Enter email address" 
+                        <input type="email" id="email" name="email"
+                               placeholder="Enter email address"
                                value="<%= isEdit ? user.getEmail() : "" %>"
                                required>
                     </div>
 
-                    <div class="form-group">
-                        <label for="country">Country <span class="required">*</span></label>
-                        <select id="country" name="country" required>
-                            <option value="">Select country</option>
-                            <option value="Sri Lanka" <%= isEdit && "Sri Lanka".equals(user.getCountry()) ? "selected" : "" %>>Sri Lanka</option>
-                            <option value="India" <%= isEdit && "India".equals(user.getCountry()) ? "selected" : "" %>>India</option>
-                            <option value="USA" <%= isEdit && "USA".equals(user.getCountry()) ? "selected" : "" %>>United States</option>
-                            <option value="UK" <%= isEdit && "UK".equals(user.getCountry()) ? "selected" : "" %>>United Kingdom</option>
-                            <option value="Canada" <%= isEdit && "Canada".equals(user.getCountry()) ? "selected" : "" %>>Canada</option>
-                            <option value="Australia" <%= isEdit && "Australia".equals(user.getCountry()) ? "selected" : "" %>>Australia</option>
-                            <option value="Germany" <%= isEdit && "Germany".equals(user.getCountry()) ? "selected" : "" %>>Germany</option>
-                            <option value="France" <%= isEdit && "France".equals(user.getCountry()) ? "selected" : "" %>>France</option>
-                            <option value="Japan" <%= isEdit && "Japan".equals(user.getCountry()) ? "selected" : "" %>>Japan</option>
-                            <option value="Other" <%= isEdit && "Other".equals(user.getCountry()) ? "selected" : "" %>>Other</option>
-                        </select>
-                    </div>
 
                     <% if (!isEdit) { %>
                         <div class="form-group">
                             <label for="password">Password <span class="required">*</span></label>
-                            <input type="password" id="password" name="password" 
-                                   placeholder="Enter password" 
+                            <input type="password" id="password" name="password"
+                                   placeholder="Enter password"
                                    required>
                         </div>
                     <% } %>

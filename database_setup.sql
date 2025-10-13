@@ -11,15 +11,29 @@ USE oop_project_db;
 DROP TABLE IF EXISTS users;
 
 -- Create users table with password field
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    country VARCHAR(50) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+CREATE TABLE Users (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    FirstName NVARCHAR(100) NOT NULL,
+    LastName NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) NOT NULL UNIQUE,
+    Password NVARCHAR(255) NOT NULL,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    UpdatedAt DATETIME DEFAULT GETDATE()
 );
+
+
+  CREATE TRIGGER trg_UpdateUsers
+ON Users
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE Users
+    SET UpdatedAt = GETDATE()
+    FROM Users U
+    INNER JOIN inserted i ON U.Id = i.Id;
+END;
+
 
 -- Insert sample users for testing
 INSERT INTO users (name, email, country, password) VALUES
