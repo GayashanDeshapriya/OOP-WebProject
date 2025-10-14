@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import com.OOPWebProject.dao.UserDAO;
 import com.OOPWebProject.model.User;
 
-@WebServlet("/")
+@WebServlet("/user/*")
 public class UserController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserDAO userDAO;
@@ -33,12 +33,22 @@ public class UserController extends HttpServlet {
 
         String action = request.getServletPath();
 
+        // Exclude static resources from servlet processing
+        if (action.startsWith("/css/") || action.startsWith("/js/") ||
+            action.startsWith("/images/") || action.startsWith("/fonts/") ||
+            action.endsWith(".css") || action.endsWith(".js") ||
+            action.endsWith(".png") || action.endsWith(".jpg") || action.endsWith(".jpeg")) {
+            // Let the default servlet handle static resources
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         // Check if user is logged in for protected routes
         HttpSession session = request.getSession(false);
         User currentUser = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (currentUser == null && !action.equals("/login") && !action.equals("/register")) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
             return;
         }
 

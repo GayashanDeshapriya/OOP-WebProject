@@ -4,7 +4,7 @@
     // Check if user is logged in
     User user = (User) session.getAttribute("user");
     if (user == null) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
 %>
@@ -14,362 +14,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - OOP Web Project</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-        }
-
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0 40px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .navbar-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
-
-        .navbar-brand {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .navbar-user {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: white;
-            color: #667eea;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .user-details {
-            text-align: right;
-        }
-
-        .user-name {
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-        .user-email {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        .btn-logout {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid white;
-            padding: 8px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-logout:hover {
-            background: white;
-            color: #667eea;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .welcome-section {
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .welcome-section h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 32px;
-        }
-
-        .welcome-section p {
-            color: #666;
-            font-size: 16px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-card.purple {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .stat-card.pink {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-
-        .stat-card.green {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-        }
-
-        .stat-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .stat-title {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .actions-section {
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            animation: fadeIn 0.5s ease 0.2s backwards;
-        }
-
-        .actions-section h2 {
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 24px;
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .action-btn {
-            padding: 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: #333;
-            display: block;
-        }
-
-        .action-btn:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-            transform: translateY(-3px);
-        }
-
-        .action-btn .icon {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        .action-btn .title {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .action-btn .description {
-            font-size: 13px;
-            color: #999;
-        }
-
-        .info-card {
-            background: #fff9e6;
-            border-left: 4px solid #ffa726;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
-            animation: fadeIn 0.5s ease 0.4s backwards;
-        }
-
-        .info-card h3 {
-            color: #e65100;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .info-card p {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 768px) {
-            .navbar-content {
-                padding: 0 20px;
-            }
-
-            .navbar-brand {
-                font-size: 20px;
-            }
-
-            .user-details {
-                display: none;
-            }
-
-            .welcome-section {
-                padding: 25px;
-            }
-
-            .welcome-section h1 {
-                font-size: 24px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .actions-section {
-                padding: 25px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="navbar-brand">🚀 OOP Web Project</div>
-            <div class="navbar-user">
-                <div class="user-info">
-                    <div class="user-avatar"><%= user.getfirstName().substring(0, 1).toUpperCase() %></div>
-                    <div class="user-details">
-                        <div class="user-name"><%= user.getfirstName() %></div>
-                        <div class="user-email"><%= user.getEmail() %></div>
+    <div class="wrapper">
+        <!-- Header with Navigation -->
+        <header class="header">
+            <div class="container">
+                <nav class="navbar">
+                    <a href="${pageContext.request.contextPath}/" class="navbar-brand">OOP Web Project</a>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/dashboard.jsp" class="nav-link active">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/listUsers.jsp" class="nav-link">Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/profile.jsp" class="nav-link">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/settings.jsp" class="nav-link">Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/auth/logout" class="nav-link">Logout</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Page Title -->
+                <div class="dashboard-header">
+                    <div class="container">
+                        <h1>Dashboard</h1>
+                        <p class="text-secondary">Welcome back! Here's what's happening today.</p>
                     </div>
                 </div>
-                <a href="auth?action=logout" class="btn-logout">Logout</a>
+
+                <!-- Statistics Cards -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-value">1,234</div>
+                        <div class="stat-change positive">↑ 12% from last month</div>
+                    </div>
+
+                    <div class="stat-card success">
+                        <div class="stat-label">Active Users</div>
+                        <div class="stat-value">987</div>
+                        <div class="stat-change positive">↑ 8% from last month</div>
+                    </div>
+
+                    <div class="stat-card warning">
+                        <div class="stat-label">Pending Approvals</div>
+                        <div class="stat-value">45</div>
+                        <div class="stat-change">Needs attention</div>
+                    </div>
+
+                    <div class="stat-card info">
+                        <div class="stat-label">New Registrations</div>
+                        <div class="stat-value">23</div>
+                        <div class="stat-change">Today</div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Recent Activity</span>
+                        <a href="${pageContext.request.contextPath}/listUsers.jsp" class="btn btn-sm btn-primary">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Action</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>John Doe</td>
+                                        <td>Created new account</td>
+                                        <td>2 hours ago</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jane Smith</td>
+                                        <td>Updated profile</td>
+                                        <td>4 hours ago</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mike Johnson</td>
+                                        <td>Password reset request</td>
+                                        <td>6 hours ago</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sarah Williams</td>
+                                        <td>Login attempt failed</td>
+                                        <td>8 hours ago</td>
+                                        <td><span class="badge badge-danger">Failed</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">Quick Actions</div>
+                    <div class="card-body">
+                        <div class="d-flex gap-md flex-wrap">
+                            <a href="${pageContext.request.contextPath}/userForm.jsp" class="btn btn-primary">
+                                Add New User
+                            </a>
+                            <a href="${pageContext.request.contextPath}/listUsers.jsp" class="btn btn-secondary">
+                                Manage Users
+                            </a>
+                            <a href="${pageContext.request.contextPath}/settings.jsp" class="btn btn-outline">
+                                System Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
+        </main>
 
-    <div class="container">
-        <div class="welcome-section">
-            <h1>Welcome back, <%= user.getfirstName() %>! 👋</h1>
-            <p>Here's what's happening with your account today.</p>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card purple">
-                <div class="stat-icon">👤</div>
-                <div class="stat-title">Account Status</div>
-                <div class="stat-value">Active</div>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <p class="footer-text">&copy; 2025 OOP Web Project. All rights reserved.</p>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="stat-card green">
-                <div class="stat-icon">📧</div>
-                <div class="stat-title">Email Verified</div>
-                <div class="stat-value">Yes</div>
-            </div>
-        </div>
-
-        <div class="actions-section">
-            <h2>Quick Actions</h2>
-            <div class="action-buttons">
-                <a href="profile.jsp" class="action-btn">
-                    <div class="icon">👤</div>
-                    <div class="title">My Profile</div>
-                    <div class="description">View and edit your profile</div>
-                </a>
-
-                <a href="list" class="action-btn">
-                    <div class="icon">📋</div>
-                    <div class="title">All Users</div>
-                    <div class="description">View all registered users</div>
-                </a>
-
-                <a href="settings.jsp" class="action-btn">
-                    <div class="icon">⚙️</div>
-                    <div class="title">Settings</div>
-                    <div class="description">Manage your settings</div>
-                </a>
-
-                <a href="#" class="action-btn" onclick="alert('Help documentation coming soon!'); return false;">
-                    <div class="icon">❓</div>
-                    <div class="title">Help & Support</div>
-                    <div class="description">Get help and support</div>
-                </a>
-            </div>
-
-            <div class="info-card">
-                <h3>💡 Pro Tip</h3>
-                <p>Keep your account secure by using a strong password and never sharing your credentials with anyone.</p>
-            </div>
-        </div>
+        </footer>
     </div>
 </body>
 </html>

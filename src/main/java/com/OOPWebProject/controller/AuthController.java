@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import com.OOPWebProject.dao.UserDAO;
 import com.OOPWebProject.model.User;
 
-@WebServlet("/auth")
+@WebServlet({"/auth", "/auth/login", "/auth/register", "/auth/logout"})
 public class AuthController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserDAO userDAO;
@@ -24,9 +24,17 @@ public class AuthController extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
+        String servletPath = request.getServletPath();
 
+        // Determine action from URL path if not provided as parameter
         if (action == null) {
-            action = "login";
+            if (servletPath.contains("/register")) {
+                action = "register";
+            } else if (servletPath.contains("/logout")) {
+                action = "logout";
+            } else {
+                action = "login";
+            }
         }
 
         try {
@@ -41,7 +49,7 @@ public class AuthController extends HttpServlet {
                     logoutUser(request, response);
                     break;
                 default:
-                    response.sendRedirect("login.jsp");
+                    response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
                     break;
             }
         } catch (Exception e) {
@@ -53,16 +61,22 @@ public class AuthController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        String servletPath = request.getServletPath();
+
+        // Determine action from URL path if not provided as parameter
+        if (action == null && servletPath.contains("/logout")) {
+            action = "logout";
+        }
 
         if ("logout".equals(action)) {
-        				try {
-				logoutUser(request, response);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new ServletException(e);
-			}
+            try {
+                logoutUser(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ServletException(e);
+            }
         } else {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         }
     }
 
@@ -82,7 +96,7 @@ public class AuthController extends HttpServlet {
             password == null || password.trim().isEmpty() ) {
 
             request.setAttribute("errorMessage", "All fields are required!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
             return;
         }
 
@@ -91,7 +105,7 @@ public class AuthController extends HttpServlet {
             request.setAttribute("name", firstname);
             request.setAttribute("name", lastname);
             request.setAttribute("email", email);
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
             return;
         }
 
@@ -99,7 +113,7 @@ public class AuthController extends HttpServlet {
             request.setAttribute("errorMessage", "Email already registered!");
             request.setAttribute("name", firstname);
             request.setAttribute("name", lastname);
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
             return;
         }
 
@@ -110,7 +124,7 @@ public class AuthController extends HttpServlet {
         // Set success message and redirect to login
         HttpSession session = request.getSession();
         session.setAttribute("successMessage", "Registration successful! Please login.");
-        response.sendRedirect("login.jsp");
+        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
     }
 
     private void loginUser(HttpServletRequest request, HttpServletResponse response)
@@ -124,7 +138,7 @@ public class AuthController extends HttpServlet {
             password == null || password.trim().isEmpty()) {
 
             request.setAttribute("errorMessage", "Email and password are required!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
             return;
         }
 
@@ -140,11 +154,11 @@ public class AuthController extends HttpServlet {
             session.setAttribute("userName", user.getlastName());
             session.setAttribute("userEmail", user.getEmail());
 
-            response.sendRedirect("dashboard.jsp");
+            response.sendRedirect(request.getContextPath() + "/dashboard.jsp");
         } else {
             request.setAttribute("errorMessage", "Invalid email or password!");
             request.setAttribute("email", email);
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
         }
     }
 
@@ -156,6 +170,6 @@ public class AuthController extends HttpServlet {
             session.invalidate();
         }
 
-        response.sendRedirect("login.jsp");
+        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
     }
 }

@@ -14,7 +14,7 @@ public class UserDAO {
 		    "INSERT INTO Users (FirstName, LastName, Email, Password) VALUES (?, ?, ?, ?)";
 
     private static final String SELECT_USER_BY_ID = "SELECT id, firstname,lastname, email FROM users WHERE id = ?";
-    private static final String SELECT_ALL_USERS = "SELECT * FROM users";
+    private static final String SELECT_ALL_USERS = "SELECT * FROM Users";
     private static final String DELETE_USER_SQL = "DELETE FROM users WHERE id = ?";
     private static final String UPDATE_USER_SQL = "UPDATE users SET name = ?, email = ?, country = ? WHERE id = ?";
 
