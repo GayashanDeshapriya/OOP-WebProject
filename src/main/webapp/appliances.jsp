@@ -139,16 +139,16 @@
                     <div class="card-header">💡 Common Appliance Wattage Reference</div>
                     <div class="card-body">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                            <div style="padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                            <div style="padding: 10px; background-color: primary; border-radius: 4px;">
                                 <strong>Lighting:</strong> LED Bulb: 10-15W, CFL: 15-20W, Tube Light: 40W
                             </div>
-                            <div style="padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                            <div style="padding: 10px; background-color: primary; border-radius: 4px;">
                                 <strong>Fans:</strong> Ceiling Fan: 70-80W, Table Fan: 50-60W
                             </div>
-                            <div style="padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                            <div style="padding: 10px; background-color: primary; border-radius: 4px;">
                                 <strong>Electronics:</strong> TV (LED): 80-120W, Laptop: 50-65W
                             </div>
-                            <div style="padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                            <div style="padding: 10px; background-color: primary; border-radius: 4px;">
                                 <strong>Cooling:</strong> AC (1.5 ton): 1500W, Refrigerator: 150-200W
                             </div>
                         </div>
