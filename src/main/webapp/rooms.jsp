@@ -10,7 +10,7 @@
         response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
-    
+
     // Fetch all rooms
     RoomDAO roomDAO = new RoomDAO();
     List<Room> rooms = roomDAO.getAllRooms();
@@ -121,11 +121,11 @@
                     </div>
                     <div class="stat-card success">
                         <div class="stat-label">Occupied</div>
-                        <div class="stat-value"><%= roomDAO.getOccupiedRoomCount() %></div>
+                        <div class="stat-value"><%= roomDAO.getOccupiedRoomsCount() %></div>
                     </div>
                     <div class="stat-card warning">
                         <div class="stat-label">Vacant</div>
-                        <div class="stat-value"><%= rooms.size() - roomDAO.getOccupiedRoomCount() %></div>
+                        <div class="stat-value"><%= rooms.size() - roomDAO.getOccupiedRoomsCount() %></div>
                     </div>
                 </div>
             </div>
