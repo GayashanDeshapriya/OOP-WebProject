@@ -44,7 +44,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>Room List</span>
-                        <button class="btn btn-primary" onclick="showAddRoomForm()">+ Add New Room</button>
+                        <button class="btn btn-primary" onclick="showAddRoomModal()">+ Add New Room</button>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -117,6 +117,50 @@
             </div>
         </footer>
     </div>
+
+    <!-- Add/Edit Room Modal -->
+<div id="roomModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Add New Room</h2>
+            <span class="close" onclick="closeRoomModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="roomForm" onsubmit="submitRoomForm(event)">
+                <input type="hidden" id="roomId" name="id">
+
+                <div class="form-group">
+                    <label for="roomName">Room Name *</label>
+                    <input type="text" id="roomName" name="roomName" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="floorNumber">Floor Number *</label>
+                    <input type="number" id="floorNumber" name="floorNumber" class="form-control" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="occupantName">Occupant Name</label>
+                    <input type="text" id="occupantName" name="occupantName" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" name="status" class="form-control" required>
+                        <option value="vacant">Vacant</option>
+                        <option value="occupied">Occupied</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeRoomModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
     <script>
         function showAddRoomForm() {
