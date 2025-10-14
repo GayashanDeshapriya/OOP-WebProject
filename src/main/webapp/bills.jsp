@@ -201,7 +201,7 @@
 
         function deleteBill(billId) {
             if (confirm('Are you sure you want to delete this bill?')) {
-                window.location.href = '${pageContext.request.contextPath}/bill?action=delete&id=' + billId;
+                window.location.href = '${pageContext.request.contextPath}/bills?action=delete&id=' + billId;
             }
         }
     </script>
