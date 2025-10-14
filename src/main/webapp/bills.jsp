@@ -96,7 +96,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div style="padding: 15px; background-color: #d1ecf1; border-left: 4px solid #17a2b8; border-radius: 4px; margin-top: 15px;">
+                        <div style="padding: 15px; background-color:primary; border-left: 4px solid #17a2b8; border-radius: 4px; margin-top: 15px;">
                             <strong>💡 Important Note:</strong>
                             <p style="margin: 5px 0 0 0;">Rates are calculated progressively. For example, 100 units = (60×30) + (30×37) + (10×42) = Rs. 3,330</p>
                         </div>

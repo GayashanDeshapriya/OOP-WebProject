@@ -13,15 +13,15 @@
         response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
-    
+
     // Fetch all appliances
     ApplianceDAO applianceDAO = new ApplianceDAO();
     RoomDAO roomDAO = new RoomDAO();
-    
+
     String roomIdParam = request.getParameter("roomId");
     List<Appliance> appliances;
     Room selectedRoom = null;
-    
+
     if (roomIdParam != null && !roomIdParam.isEmpty()) {
         int roomId = Integer.parseInt(roomIdParam);
         appliances = applianceDAO.getAppliancesByRoom(roomId);
@@ -29,7 +29,7 @@
     } else {
         appliances = applianceDAO.getAllAppliances();
     }
-    
+
     List<Room> allRooms = roomDAO.getAllRooms();
     DecimalFormat df = new DecimalFormat("#,##0.0");
 %>
@@ -46,32 +46,9 @@
         <!-- Header with Navigation -->
         <header class="header">
             <div class="container">
-                <nav class="navbar">
-                    <a href="${pageContext.request.contextPath}/" class="navbar-brand">⚡ PowerSplit</a>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard.jsp" class="nav-link">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/rooms.jsp" class="nav-link">Rooms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/appliances.jsp" class="nav-link active">Appliances</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/bills.jsp" class="nav-link">Bills</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/reports.jsp" class="nav-link">Reports</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="nav-link">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
+                <jsp:include page="/WEB-INF/includes/navbar.jsp" />
             </div>
         </header>
-
         <!-- Main Content -->
         <main class="main-content">
             <div class="container">
@@ -96,7 +73,7 @@
                             <select name="roomId" id="roomFilter" class="form-control" style="width: auto;" onchange="this.form.submit()">
                                 <option value="">All Rooms</option>
                                 <% for (Room room : allRooms) { %>
-                                    <option value="<%= room.getRoomId() %>" 
+                                    <option value="<%= room.getRoomId() %>"
                                         <%= (roomIdParam != null && roomIdParam.equals(String.valueOf(room.getRoomId()))) ? "selected" : "" %>>
                                         <%= room.getRoomName() %>
                                     </option>
