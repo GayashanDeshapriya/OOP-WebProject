@@ -154,7 +154,7 @@ public class AuthController extends HttpServlet {
             session.setAttribute("userName", user.getlastName());
             session.setAttribute("userEmail", user.getEmail());
 
-            response.sendRedirect(request.getContextPath() + "/dashboard.jsp");
+            response.sendRedirect(request.getContextPath() + "/dashboard/dashboard.jsp");
         } else {
             request.setAttribute("errorMessage", "Invalid email or password!");
             request.setAttribute("email", email);

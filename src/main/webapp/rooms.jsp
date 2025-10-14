@@ -25,35 +25,12 @@
 </head>
 <body>
     <div class="wrapper">
-        <!-- Header with Navigation -->
+    <!-- Header with Navigation -->
         <header class="header">
             <div class="container">
-                <nav class="navbar">
-                    <a href="${pageContext.request.contextPath}/" class="navbar-brand">⚡ PowerSplit</a>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard.jsp" class="nav-link">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/rooms.jsp" class="nav-link active">Rooms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/appliances.jsp" class="nav-link">Appliances</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/bills.jsp" class="nav-link">Bills</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/reports.jsp" class="nav-link">Reports</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="nav-link">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
+                <jsp:include page="/WEB-INF/includes/navbar.jsp" />
             </div>
         </header>
-
         <!-- Main Content -->
         <main class="main-content">
             <div class="container">

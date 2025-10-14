@@ -9,12 +9,27 @@
         return;
     }
 
-    int totalRooms = (Integer) request.getAttribute("totalRooms");
-    int occupiedRooms = (Integer) request.getAttribute("occupiedRooms");
-    int totalAppliances = (Integer) request.getAttribute("totalAppliances");
-    double currentMonthTotal = (Double) request.getAttribute("currentMonthTotal");
+    // Get attributes with null checks and default values
+    Integer totalRoomsAttr = (Integer) request.getAttribute("totalRooms");
+    Integer occupiedRoomsAttr = (Integer) request.getAttribute("occupiedRooms");
+    Integer totalAppliancesAttr = (Integer) request.getAttribute("totalAppliances");
+    Double currentMonthTotalAttr = (Double) request.getAttribute("currentMonthTotal");
+    
+    int totalRooms = (totalRoomsAttr != null) ? totalRoomsAttr : 0;
+    int occupiedRooms = (occupiedRoomsAttr != null) ? occupiedRoomsAttr : 0;
+    int totalAppliances = (totalAppliancesAttr != null) ? totalAppliancesAttr : 0;
+    double currentMonthTotal = (currentMonthTotalAttr != null) ? currentMonthTotalAttr : 0.0;
+    
     List<Bill> recentBills = (List<Bill>) request.getAttribute("recentBills");
     List<RoomBillSummary> highUsageRooms = (List<RoomBillSummary>) request.getAttribute("highUsageRooms");
+    
+    // Ensure lists are not null
+    if (recentBills == null) {
+        recentBills = new java.util.ArrayList<>();
+    }
+    if (highUsageRooms == null) {
+        highUsageRooms = new java.util.ArrayList<>();
+    }
 
     DecimalFormat df = new DecimalFormat("#,##0.00");
     DecimalFormat dfUnits = new DecimalFormat("#,##0.0");

@@ -12,11 +12,11 @@
         response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
-    
+
     BillDAO billDAO = new BillDAO();
     RoomBillSummaryDAO summaryDAO = new RoomBillSummaryDAO();
     Bill latestBill = billDAO.getLatestBill();
-    
+
     DecimalFormat df = new DecimalFormat("#,##0.00");
     DecimalFormat dfUnits = new DecimalFormat("#,##0.0");
 %>
@@ -33,29 +33,7 @@
         <!-- Header with Navigation -->
         <header class="header">
             <div class="container">
-                <nav class="navbar">
-                    <a href="${pageContext.request.contextPath}/" class="navbar-brand">⚡ PowerSplit</a>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard.jsp" class="nav-link">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/rooms.jsp" class="nav-link">Rooms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/appliances.jsp" class="nav-link">Appliances</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/bills.jsp" class="nav-link">Bills</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/reports.jsp" class="nav-link active">Reports</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="nav-link">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
+                <jsp:include page="/WEB-INF/includes/navbar.jsp" />
             </div>
         </header>
 
@@ -69,7 +47,7 @@
                 </div>
 
                 <!-- Latest Month Summary -->
-                <% if (latestBill != null) { 
+                <% if (latestBill != null) {
                     List<RoomBillSummary> summaries = summaryDAO.getSummariesByBill(latestBill.getBillId());
                 %>
                 <div class="card">
@@ -169,9 +147,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% 
+                                    <%
                                     double prevUnits = 0;
-                                    for (int i = 0; i < recentBills.size(); i++) { 
+                                    for (int i = 0; i < recentBills.size(); i++) {
                                         Bill bill = recentBills.get(i);
                                         double avgRate = bill.getTotalUnits() > 0 ? bill.getTotalBill() / bill.getTotalUnits() : 0;
                                         String trend = "";

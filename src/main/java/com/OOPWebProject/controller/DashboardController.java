@@ -37,7 +37,7 @@ public class DashboardController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
@@ -46,54 +46,99 @@ public class DashboardController extends HttpServlet {
 
         try {
             User user = (User) session.getAttribute("user");
-            
-            // Get dashboard statistics
-            int totalRooms = roomDAO.getTotalRoomsCount();
-            int occupiedRooms = roomDAO.getOccupiedRoomsCount();
-            int totalAppliances = applianceDAO.getTotalAppliancesCount();
-            
-            // Get recent bills
-            List<Bill> recentBills = billDAO.getRecentBills(5);
-            
-            // Get high usage alerts
-            List<RoomBillSummary> highUsageRooms = summaryDAO.getHighUsageAlerts();
-            
-            // Calculate current month statistics if available
-            Bill currentBill = billDAO.getCurrentMonthBill();
-            double currentMonthTotal = 0;
-            if (currentBill != null) {
-                currentMonthTotal = currentBill.getTotalBill();
+
+            // Get dashboard statistics with default values
+            int totalRooms = 0;
+            int occupiedRooms = 0;
+            int totalAppliances = 0;
+            double currentMonthTotal = 0.0;
+
+            try {
+                totalRooms = roomDAO.getTotalRoomsCount();
+            } catch (Exception e) {
+                System.err.println("Error getting total rooms: " + e.getMessage());
             }
-            
-            // Set attributes
+
+            try {
+                occupiedRooms = roomDAO.getOccupiedRoomsCount();
+            } catch (Exception e) {
+                System.err.println("Error getting occupied rooms: " + e.getMessage());
+            }
+
+            try {
+                totalAppliances = applianceDAO.getTotalAppliancesCount();
+            } catch (Exception e) {
+                System.err.println("Error getting total appliances: " + e.getMessage());
+            }
+
+            // Get recent bills
+            List<Bill> recentBills = null;
+            try {
+                recentBills = billDAO.getRecentBills(5);
+            } catch (Exception e) {
+                System.err.println("Error getting recent bills: " + e.getMessage());
+                recentBills = new java.util.ArrayList<>();
+            }
+
+            // Get high usage alerts
+            List<RoomBillSummary> highUsageRooms = null;
+            try {
+                highUsageRooms = summaryDAO.getHighUsageAlerts();
+            } catch (Exception e) {
+                System.err.println("Error getting high usage alerts: " + e.getMessage());
+                highUsageRooms = new java.util.ArrayList<>();
+            }
+
+            // Calculate current month statistics if available
+            try {
+                Bill currentBill = billDAO.getCurrentMonthBill();
+                if (currentBill != null) {
+                    currentMonthTotal = currentBill.getTotalBill();
+                }
+            } catch (Exception e) {
+                System.err.println("Error getting current month bill: " + e.getMessage());
+            }
+
+            // Set attributes - ensure no nulls
             request.setAttribute("totalRooms", totalRooms);
             request.setAttribute("occupiedRooms", occupiedRooms);
             request.setAttribute("totalAppliances", totalAppliances);
-            request.setAttribute("recentBills", recentBills);
-            request.setAttribute("highUsageRooms", highUsageRooms);
+            request.setAttribute("recentBills", recentBills != null ? recentBills : new java.util.ArrayList<>());
+            request.setAttribute("highUsageRooms", highUsageRooms != null ? highUsageRooms : new java.util.ArrayList<>());
             request.setAttribute("currentMonthTotal", currentMonthTotal);
-            
+            request.setAttribute("user", user);
+
             // Role-based dashboard
             if ("admin".equals(user.getRole())) {
                 // Admin dashboard - show all data
-                List<Room> allRooms = roomDAO.getAllRooms();
-                request.setAttribute("rooms", allRooms);
+                try {
+                    List<Room> allRooms = roomDAO.getAllRooms();
+                    request.setAttribute("rooms", allRooms != null ? allRooms : new java.util.ArrayList<>());
+                } catch (Exception e) {
+                    System.err.println("Error getting all rooms: " + e.getMessage());
+                    request.setAttribute("rooms", new java.util.ArrayList<>());
+                }
             } else {
                 // Tenant dashboard - show only their room data
-                Integer userId = user.getId();
-                Room userRoom = roomDAO.getRoomByUserId(userId);
-                if (userRoom != null) {
-                    request.setAttribute("userRoom", userRoom);
-                    List<RoomBillSummary> userBillHistory = summaryDAO.getSummariesByRoom(userRoom.getRoomId());
-                    request.setAttribute("userBillHistory", userBillHistory);
+                try {
+                    Integer userId = user.getId();
+                    Room userRoom = roomDAO.getRoomByUserId(userId);
+                    if (userRoom != null) {
+                        request.setAttribute("userRoom", userRoom);
+                        List<RoomBillSummary> userBillHistory = summaryDAO.getSummariesByRoom(userRoom.getRoomId());
+                        request.setAttribute("userBillHistory", userBillHistory != null ? userBillHistory : new java.util.ArrayList<>());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error getting user room data: " + e.getMessage());
                 }
             }
-            
-            request.getRequestDispatcher("/dashboard-view.jsp").forward(request, response);
-            
+
+            request.getRequestDispatcher("/dashboard/dashboard.jsp").forward(request, response);
+
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServletException(e);
+            request.setAttribute("errorMessage", "Error loading dashboard: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         }
     }
 }
