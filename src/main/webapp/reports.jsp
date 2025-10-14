@@ -187,19 +187,19 @@
                     <div class="card-header">💡 Energy Saving Recommendations</div>
                     <div class="card-body">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-                            <div style="padding: 15px; background-color: #d1ecf1; border-left: 4px solid #17a2b8; border-radius: 4px;">
+                            <div style="padding: 15px; background-color: primary; border-left: 4px solid #17a2b8; border-radius: 4px;">
                                 <strong>🌡️ Air Conditioning</strong>
                                 <p>Set AC to 24-25°C. Each degree lower increases consumption by 6-8%. Use timer mode.</p>
                             </div>
-                            <div style="padding: 15px; background-color: #d4edda; border-left: 4px solid #28a745; border-radius: 4px;">
+                            <div style="padding: 15px; background-color: primary; border-left: 4px solid #28a745; border-radius: 4px;">
                                 <strong>💡 Lighting</strong>
                                 <p>Switch to LED bulbs (85% less energy than incandescent). Turn off lights when not in use.</p>
                             </div>
-                            <div style="padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                            <div style="padding: 15px; background-color: primary; border-left: 4px solid #ffc107; border-radius: 4px;">
                                 <strong>🧊 Refrigerator</strong>
                                 <p>Keep fridge at 3-4°C. Avoid keeping door open. Defrost regularly for efficiency.</p>
                             </div>
-                            <div style="padding: 15px; background-color: #f8d7da; border-left: 4px solid #dc3545; border-radius: 4px;">
+                            <div style="padding: 15px; background-color: primary; border-left: 4px solid #dc3545; border-radius: 4px;">
                                 <strong>⚡ Standby Power</strong>
                                 <p>Unplug chargers and devices. Standby mode can waste 5-10% of monthly consumption.</p>
                             </div>
