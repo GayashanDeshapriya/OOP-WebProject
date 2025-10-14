@@ -179,14 +179,30 @@
 
 
         function editRoom(roomId) {
+        	debugger;
             document.getElementById('modalTitle').textContent = 'Edit Room';
             document.getElementById('action').value = 'update';
-            document.getElementById('roomModal').classList.add('show');
 
-            // You'll need to populate the form with existing data
-            // Redirect to a servlet that prepares the data
-            window.location.href = '${pageContext.request.contextPath}/rooms?action=edit&id=' + roomId;
+            // Fetch room data via AJAX
+            fetch('${pageContext.request.contextPath}/rooms?action=get&id=' + roomId)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate form fields with existing data
+                    document.getElementById('roomId').value = data.roomId;
+                    document.getElementById('roomName').value = data.roomName;
+                    document.getElementById('floorNumber').value = data.floorNumber;
+                    document.getElementById('occupantName').value = data.occupantName || '';
+                    document.getElementById('status').value = data.status;
+
+                    // Show the modal
+                    document.getElementById('roomModal').classList.add('show');
+                })
+                .catch(error => {
+                    console.error('Error fetching room data:', error);
+                    alert('Error loading room data. Please try again.');
+                });
         }
+
 
         function closeRoomModal() {
             document.getElementById('roomModal').classList.remove('show');
@@ -197,6 +213,7 @@
                 window.location.href = '${pageContext.request.contextPath}/rooms?action=delete&id=' + roomId;
             }
         }
+
 
         // Close modal when clicking outside
         window.onclick = function(event) {
