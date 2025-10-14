@@ -1,6 +1,6 @@
 package com.OOPWebProject.controller;
-
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,10 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import com.OOPWebProject.dao.RoomDAO;
 import com.OOPWebProject.model.Room;
-import com.OOPWebProject.model.User;
+
 
 @WebServlet("/rooms/*")
 public class RoomController extends HttpServlet {
@@ -24,7 +23,7 @@ public class RoomController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
@@ -38,6 +37,9 @@ public class RoomController extends HttpServlet {
             switch (action) {
                 case "list":
                     listRooms(request, response);
+                    break;
+                case "get":
+                    getRoomJson(request, response);
                     break;
                 case "edit":
                     showEditForm(request, response);
@@ -57,7 +59,7 @@ public class RoomController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
@@ -65,7 +67,7 @@ public class RoomController extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        
+
         try {
             switch (action) {
                 case "add":
@@ -78,6 +80,10 @@ public class RoomController extends HttpServlet {
                     listRooms(request, response);
                     break;
             }
+
+         // Redirect back to rooms page after successful save
+            response.sendRedirect(request.getContextPath() + "/rooms?action=list");
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServletException(e);
@@ -105,14 +111,18 @@ public class RoomController extends HttpServlet {
         }
 
         int floorNumber = floorNumberStr != null ? Integer.parseInt(floorNumberStr) : 1;
-        
+
         Room room = new Room(roomName, occupantName, floorNumber);
         if (status != null && !status.isEmpty()) {
             room.setStatus(status);
         }
-        
+
         roomDAO.insertRoom(room);
-        response.sendRedirect(request.getContextPath() + "/rooms?action=list&success=Room added successfully");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        out.print("{\"success\": true, \"message\": \"Room saved successfully\"}");
+
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
@@ -127,7 +137,7 @@ public class RoomController extends HttpServlet {
 
     private void updateRoom(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        int roomId = Integer.parseInt(request.getParameter("roomId"));
+        int roomId = Integer.parseInt(request.getParameter("id")); // Changed from roomId parameter
         String roomName = request.getParameter("roomName");
         String occupantName = request.getParameter("occupantName");
         int floorNumber = Integer.parseInt(request.getParameter("floorNumber"));
@@ -135,9 +145,13 @@ public class RoomController extends HttpServlet {
 
         Room room = new Room(roomId, roomName, occupantName, null, floorNumber, status);
         roomDAO.updateRoom(room);
-        
-        response.sendRedirect(request.getContextPath() + "/rooms?action=list&success=Room updated successfully");
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        out.print("{\"success\": true, \"message\": \"Room updated successfully\"}");
     }
+
 
     private void deleteRoom(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
@@ -145,4 +159,25 @@ public class RoomController extends HttpServlet {
         roomDAO.deleteRoom(roomId);
         response.sendRedirect(request.getContextPath() + "/rooms?action=list&success=Room deleted successfully");
     }
+
+    private void getRoomJson(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        int roomId = Integer.parseInt(request.getParameter("id"));
+        Room room = roomDAO.getRoomById(roomId);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        String json = String.format(
+            "{\"roomId\": %d, \"roomName\": \"%s\", \"occupantName\": \"%s\", \"floorNumber\": %d, \"status\": \"%s\"}",
+            room.getRoomId(),
+            room.getRoomName(),
+            room.getOccupantName() != null ? room.getOccupantName() : "",
+            room.getFloorNumber(),
+            room.getStatus()
+        );
+        out.print(json);
+    }
+
 }

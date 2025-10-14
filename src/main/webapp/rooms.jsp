@@ -126,8 +126,9 @@
             <span class="close" onclick="closeRoomModal()">&times;</span>
         </div>
         <div class="modal-body">
-            <form id="roomForm" onsubmit="submitRoomForm(event)">
+            <form id="roomForm" method="post" action="${pageContext.request.contextPath}/rooms">
                 <input type="hidden" id="roomId" name="id">
+                <input type="hidden" id="action" name="action" value="add">
 
                 <div class="form-group">
                     <label for="roomName">Room Name *</label>
@@ -162,18 +163,46 @@
 </div>
 
 
+
     <script>
-        function showAddRoomForm() {
-            window.location.href = '${pageContext.request.contextPath}/roomForm.jsp';
+
+        function showAddRoomModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Room';
+            document.getElementById('roomForm').reset();
+            document.getElementById('roomId').value = '';
+            document.getElementById('roomModal').classList.add('show');
         }
 
+        function closeRoomModal() {
+            document.getElementById('roomModal').classList.remove('show');
+        }
+
+
         function editRoom(roomId) {
-            window.location.href = '${pageContext.request.contextPath}/roomForm.jsp?id=' + roomId;
+            document.getElementById('modalTitle').textContent = 'Edit Room';
+            document.getElementById('action').value = 'update';
+            document.getElementById('roomModal').classList.add('show');
+
+            // You'll need to populate the form with existing data
+            // Redirect to a servlet that prepares the data
+            window.location.href = '${pageContext.request.contextPath}/rooms?action=edit&id=' + roomId;
+        }
+
+        function closeRoomModal() {
+            document.getElementById('roomModal').classList.remove('show');
         }
 
         function deleteRoom(roomId) {
             if (confirm('Are you sure you want to delete this room?')) {
-                window.location.href = '${pageContext.request.contextPath}/room?action=delete&id=' + roomId;
+                window.location.href = '${pageContext.request.contextPath}/rooms?action=delete&id=' + roomId;
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('roomModal');
+            if (event.target == modal) {
+                closeRoomModal();
             }
         }
     </script>
