@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - OOP Web Project</title>
+<title>Login - PowerSplit</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 
@@ -14,8 +14,8 @@
 		<div class="auth-container">
 			<div class="auth-card">
 				<div class="auth-header">
-					<h1>Welcome Back</h1>
-					<p>Sign in to your account to continue</p>
+					<h1>⚡ Welcome Back to PowerSplit</h1>
+					<p>Sign in to manage your electricity billing</p>
 				</div>
 
 				<%
@@ -69,7 +69,7 @@
 				<div class="auth-footer">
 					<p>
 						Don't have an account? <a
-							href="${pageContext.request.contextPath}/register.jsp">Create
+							href="${pageContext.request.contextPath}/auth/register.jsp">Create
 							one now</a>
 					</p>
 				</div>

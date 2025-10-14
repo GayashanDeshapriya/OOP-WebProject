@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBUtil {
     // Correct JDBC URL format for MS SQL Server
-    private static final String URL = "jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=oop_project_db;encrypt=false;trustServerCertificate=true";
+    private static final String URL = "jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=PowerSplit_DB;encrypt=false;trustServerCertificate=true";
     private static final String USER = "sa";
     private static final String PASS = "12345";
 

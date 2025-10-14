@@ -24,9 +24,14 @@
 
                 <form action="${pageContext.request.contextPath}/auth/register" method="post" class="auth-form">
                     <div class="form-group">
-                        <label class="form-label" for="name">Full Name</label>
-                        <input type="text" id="name" name="name" class="form-control"
-                               placeholder="Enter your full name" required autofocus>
+                        <label class="form-label" for="name">First Name</label>
+                        <input type="text" id="fname" name="fname" class="form-control"
+                               placeholder="Enter your first name" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="name">Last Name</label>
+                        <input type="text" id="lname" name="lname" class="form-control"
+                               placeholder="Enter your last name" required autofocus>
                     </div>
 
                     <div class="form-group">

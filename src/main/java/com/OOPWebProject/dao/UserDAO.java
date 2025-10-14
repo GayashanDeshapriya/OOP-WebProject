@@ -11,17 +11,17 @@ import com.OOPWebProject.util.DBUtil;
 public class UserDAO {
 
 	private static final String INSERT_USER_SQL =
-		    "INSERT INTO Users (FirstName, LastName, Email, Password) VALUES (?, ?, ?, ?)";
+		    "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
 
-    private static final String SELECT_USER_BY_ID = "SELECT id, firstname,lastname, email FROM users WHERE id = ?";
-    private static final String SELECT_ALL_USERS = "SELECT * FROM Users";
-    private static final String DELETE_USER_SQL = "DELETE FROM users WHERE id = ?";
-    private static final String UPDATE_USER_SQL = "UPDATE users SET name = ?, email = ?, country = ? WHERE id = ?";
+    private static final String SELECT_USER_BY_ID = "SELECT user_id, first_name, last_name, email FROM users WHERE user_id = ?";
+    private static final String SELECT_ALL_USERS = "SELECT * FROM users";
+    private static final String DELETE_USER_SQL = "DELETE FROM users WHERE user_id = ?";
+    private static final String UPDATE_USER_SQL = "UPDATE users SET first_name = ?, last_name = ?, email = ? WHERE user_id = ?";
 
-    private static final String SELECT_USER_BY_EMAIL = "SELECT FirstName, LastName, Email, Password FROM users WHERE email = ?";
+    private static final String SELECT_USER_BY_EMAIL = "SELECT user_id, first_name, last_name, email, password FROM users WHERE email = ?";
 
     private static final String VALIDATE_USER_SQL =
-    	    "SELECT Id, FirstName, LastName, Email, Password FROM Users WHERE Email = ?";
+    	    "SELECT user_id, first_name, last_name, email, password FROM users WHERE email = ?";
 
 
     public void insertUser(User user) {
@@ -45,11 +45,10 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 user = new User(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getString("country"),
-                    rs.getString("password")
+                    rs.getInt("user_id"),
+                    rs.getString("first_name"),
+                    rs.getString("last_name"),
+                    rs.getString("email")
                 );
             }
         } catch (SQLException e) {
@@ -65,11 +64,10 @@ public class UserDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 users.add(new User(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getString("country"),
-                    rs.getString("password")
+                    rs.getInt("user_id"),
+                    rs.getString("first_name"),
+                    rs.getString("last_name"),
+                    rs.getString("email")
                 ));
             }
         } catch (SQLException e) {
@@ -95,8 +93,8 @@ public class UserDAO {
         try (Connection con = DBUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(UPDATE_USER_SQL)) {
             ps.setString(1, user.getfirstName());
-            ps.setString(3, user.getlastName());
-            ps.setString(2, user.getEmail());
+            ps.setString(2, user.getlastName());
+            ps.setString(3, user.getEmail());
             ps.setInt(4, user.getId());
             rowUpdated = ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -113,13 +111,13 @@ public class UserDAO {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-				String storedHash = rs.getString("Password");
+				String storedHash = rs.getString("password");
 				if (BCrypt.checkpw(password, storedHash)) {
 					user = new User(
-						rs.getInt("Id"),
-						rs.getString("FirstName"),
-						rs.getString("LastName"),
-						rs.getString("Email")
+						rs.getInt("user_id"),
+						rs.getString("first_name"),
+						rs.getString("last_name"),
+						rs.getString("email")
 					);
 				}
 			}

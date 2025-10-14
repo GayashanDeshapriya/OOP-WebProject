@@ -13,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - OOP Web Project</title>
+    <title>Welcome - PowerSplit</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
@@ -21,18 +21,18 @@
         <div class="auth-container">
             <div class="auth-card">
                 <div class="auth-header">
-                    <h1>🎉 OOP Web Project</h1>
-                    <p>Modern User Management System</p>
+                    <h1>⚡ PowerSplit</h1>
+                    <p>Smart Electricity Bill Splitting for Boarding Houses</p>
                 </div>
 
                 <div class="card-body text-center">
-                    <p class="mb-4">Welcome to our comprehensive user management system built with Java, JSP, and modern CSS.</p>
+                    <p class="mb-4">Fairly track and split electricity costs among multiple tenants based on actual appliance usage and meter readings.</p>
 
                     <div class="d-flex flex-column gap-md">
                         <a href="${pageContext.request.contextPath}/auth/login.jsp" class="btn btn-primary btn-lg">
                             Sign In
                         </a>
-                        <a href="${pageContext.request.contextPath}/register.jsp" class="btn btn-outline btn-lg">
+                        <a href="${pageContext.request.contextPath}/auth/register.jsp" class="btn btn-outline btn-lg">
                             Create New Account
                         </a>
                     </div>
@@ -40,20 +40,21 @@
 
                 <div class="auth-footer">
                     <div class="text-center">
-                        <h6 class="mb-3">Features</h6>
+                        <h6 class="mb-3">Key Features</h6>
                         <div class="d-flex flex-column gap-sm text-left">
-                            <span>✅ Modern, Responsive Design</span>
-                            <span>✅ User Authentication & Authorization</span>
-                            <span>✅ Complete CRUD Operations</span>
-                            <span>✅ Profile Management</span>
-                            <span>✅ System Settings</span>
+                            <span>⚡ Automatic Bill Calculation with CEB Tiered Rates</span>
+                            <span>📊 Fair Cost Splitting Based on Usage</span>
+                            <span>🏠 Room & Appliance Management</span>
+                            <span>📈 Usage Reports & Analytics</span>
+                            <span>⚠️ High Usage Alerts</span>
+                            <span>💡 Energy Saving Recommendations</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="text-center mt-4" style="color: white;">
-                <p>&copy; 2025 OOP Web Project. All rights reserved.</p>
+                <p>&copy; 2025 PowerSplit. All rights reserved.</p>
             </div>
         </div>
     </div>
