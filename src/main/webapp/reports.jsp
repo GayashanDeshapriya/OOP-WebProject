@@ -12,11 +12,11 @@
         response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
-    
+
     BillDAO billDAO = new BillDAO();
     RoomBillSummaryDAO summaryDAO = new RoomBillSummaryDAO();
     Bill latestBill = billDAO.getLatestBill();
-    
+
     DecimalFormat df = new DecimalFormat("#,##0.00");
     DecimalFormat dfUnits = new DecimalFormat("#,##0.0");
 %>
@@ -33,29 +33,7 @@
         <!-- Header with Navigation -->
         <header class="header">
             <div class="container">
-                <nav class="navbar">
-                    <a href="${pageContext.request.contextPath}/" class="navbar-brand">⚡ PowerSplit</a>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard.jsp" class="nav-link">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/rooms.jsp" class="nav-link">Rooms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/appliances.jsp" class="nav-link">Appliances</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/bills.jsp" class="nav-link">Bills</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/reports.jsp" class="nav-link active">Reports</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="nav-link">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
+                <jsp:include page="/WEB-INF/includes/navbar.jsp" />
             </div>
         </header>
 
@@ -69,7 +47,7 @@
                 </div>
 
                 <!-- Latest Month Summary -->
-                <% if (latestBill != null) { 
+                <% if (latestBill != null) {
                     List<RoomBillSummary> summaries = summaryDAO.getSummariesByBill(latestBill.getBillId());
                 %>
                 <div class="card">
@@ -169,9 +147,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% 
+                                    <%
                                     double prevUnits = 0;
-                                    for (int i = 0; i < recentBills.size(); i++) { 
+                                    for (int i = 0; i < recentBills.size(); i++) {
                                         Bill bill = recentBills.get(i);
                                         double avgRate = bill.getTotalUnits() > 0 ? bill.getTotalBill() / bill.getTotalUnits() : 0;
                                         String trend = "";
@@ -209,19 +187,19 @@
                     <div class="card-header">💡 Energy Saving Recommendations</div>
                     <div class="card-body">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-                            <div style="padding: 15px; background-color: #d1ecf1; border-left: 4px solid #17a2b8; border-radius: 4px;">
+                            <div style="padding: 15px; background-color: primary; border-left: 4px solid #17a2b8; border-radius: 4px;">
                                 <strong>🌡️ Air Conditioning</strong>
                                 <p>Set AC to 24-25°C. Each degree lower increases consumption by 6-8%. Use timer mode.</p>
                             </div>
-                            <div style="padding: 15px; background-color: #d4edda; border-left: 4px solid #28a745; border-radius: 4px;">
+                            <div style="padding: 15px; background-color: primary; border-left: 4px solid #28a745; border-radius: 4px;">
                                 <strong>💡 Lighting</strong>
                                 <p>Switch to LED bulbs (85% less energy than incandescent). Turn off lights when not in use.</p>
                             </div>
-                            <div style="padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                            <div style="padding: 15px; background-color: primary; border-left: 4px solid #ffc107; border-radius: 4px;">
                                 <strong>🧊 Refrigerator</strong>
                                 <p>Keep fridge at 3-4°C. Avoid keeping door open. Defrost regularly for efficiency.</p>
                             </div>
-                            <div style="padding: 15px; background-color: #f8d7da; border-left: 4px solid #dc3545; border-radius: 4px;">
+                            <div style="padding: 15px; background-color: primary; border-left: 4px solid #dc3545; border-radius: 4px;">
                                 <strong>⚡ Standby Power</strong>
                                 <p>Unplug chargers and devices. Standby mode can waste 5-10% of monthly consumption.</p>
                             </div>

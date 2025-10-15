@@ -13,11 +13,11 @@
         response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
-    
+
     // Fetch all bills
     BillDAO billDAO = new BillDAO();
     List<Bill> bills = billDAO.getAllBills();
-    
+
     DecimalFormat df = new DecimalFormat("#,##0.00");
     DecimalFormat dfUnits = new DecimalFormat("#,##0.0");
 %>
@@ -34,29 +34,7 @@
         <!-- Header with Navigation -->
         <header class="header">
             <div class="container">
-                <nav class="navbar">
-                    <a href="${pageContext.request.contextPath}/" class="navbar-brand">⚡ PowerSplit</a>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard.jsp" class="nav-link">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/rooms.jsp" class="nav-link">Rooms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/appliances.jsp" class="nav-link">Appliances</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/bills.jsp" class="nav-link active">Bills</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/reports.jsp" class="nav-link">Reports</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="nav-link">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
+                <jsp:include page="/WEB-INF/includes/navbar.jsp" />
             </div>
         </header>
 
@@ -118,7 +96,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div style="padding: 15px; background-color: #d1ecf1; border-left: 4px solid #17a2b8; border-radius: 4px; margin-top: 15px;">
+                        <div style="padding: 15px; background-color:primary; border-left: 4px solid #17a2b8; border-radius: 4px; margin-top: 15px;">
                             <strong>💡 Important Note:</strong>
                             <p style="margin: 5px 0 0 0;">Rates are calculated progressively. For example, 100 units = (60×30) + (30×37) + (10×42) = Rs. 3,330</p>
                         </div>
@@ -223,7 +201,7 @@
 
         function deleteBill(billId) {
             if (confirm('Are you sure you want to delete this bill?')) {
-                window.location.href = '${pageContext.request.contextPath}/bill?action=delete&id=' + billId;
+                window.location.href = '${pageContext.request.contextPath}/bills?action=delete&id=' + billId;
             }
         }
     </script>

@@ -25,35 +25,12 @@
 </head>
 <body>
     <div class="wrapper">
-        <!-- Header with Navigation -->
+    <!-- Header with Navigation -->
         <header class="header">
             <div class="container">
-                <nav class="navbar">
-                    <a href="${pageContext.request.contextPath}/" class="navbar-brand">⚡ PowerSplit</a>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard.jsp" class="nav-link">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/rooms.jsp" class="nav-link active">Rooms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/appliances.jsp" class="nav-link">Appliances</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/bills.jsp" class="nav-link">Bills</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/reports.jsp" class="nav-link">Reports</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="nav-link">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
+                <jsp:include page="/WEB-INF/includes/navbar.jsp" />
             </div>
         </header>
-
         <!-- Main Content -->
         <main class="main-content">
             <div class="container">
@@ -67,7 +44,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>Room List</span>
-                        <button class="btn btn-primary" onclick="showAddRoomForm()">+ Add New Room</button>
+                        <button class="btn btn-primary" onclick="showAddRoomModal()">+ Add New Room</button>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -141,18 +118,108 @@
         </footer>
     </div>
 
+    <!-- Add/Edit Room Modal -->
+<div id="roomModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Add New Room</h2>
+            <span class="close" onclick="closeRoomModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="roomForm" method="post" action="${pageContext.request.contextPath}/rooms">
+                <input type="hidden" id="roomId" name="id">
+                <input type="hidden" id="action" name="action" value="add">
+
+                <div class="form-group">
+                    <label for="roomName">Room Name *</label>
+                    <input type="text" id="roomName" name="roomName" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="floorNumber">Floor Number *</label>
+                    <input type="number" id="floorNumber" name="floorNumber" class="form-control" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="occupantName">Occupant Name</label>
+                    <input type="text" id="occupantName" name="occupantName" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" name="status" class="form-control" required>
+                        <option value="vacant">Vacant</option>
+                        <option value="occupied">Occupied</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeRoomModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
     <script>
-        function showAddRoomForm() {
-            window.location.href = '${pageContext.request.contextPath}/roomForm.jsp';
+
+        function showAddRoomModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Room';
+            document.getElementById('roomForm').reset();
+            document.getElementById('roomId').value = '';
+            document.getElementById('roomModal').classList.add('show');
         }
 
+        function closeRoomModal() {
+            document.getElementById('roomModal').classList.remove('show');
+        }
+
+
         function editRoom(roomId) {
-            window.location.href = '${pageContext.request.contextPath}/roomForm.jsp?id=' + roomId;
+        	debugger;
+            document.getElementById('modalTitle').textContent = 'Edit Room';
+            document.getElementById('action').value = 'update';
+
+            // Fetch room data via AJAX
+            fetch('${pageContext.request.contextPath}/rooms?action=get&id=' + roomId)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate form fields with existing data
+                    document.getElementById('roomId').value = data.roomId;
+                    document.getElementById('roomName').value = data.roomName;
+                    document.getElementById('floorNumber').value = data.floorNumber;
+                    document.getElementById('occupantName').value = data.occupantName || '';
+                    document.getElementById('status').value = data.status;
+
+                    // Show the modal
+                    document.getElementById('roomModal').classList.add('show');
+                })
+                .catch(error => {
+                    console.error('Error fetching room data:', error);
+                    alert('Error loading room data. Please try again.');
+                });
+        }
+
+
+        function closeRoomModal() {
+            document.getElementById('roomModal').classList.remove('show');
         }
 
         function deleteRoom(roomId) {
             if (confirm('Are you sure you want to delete this room?')) {
-                window.location.href = '${pageContext.request.contextPath}/room?action=delete&id=' + roomId;
+                window.location.href = '${pageContext.request.contextPath}/rooms?action=delete&id=' + roomId;
+            }
+        }
+
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('roomModal');
+            if (event.target == modal) {
+                closeRoomModal();
             }
         }
     </script>

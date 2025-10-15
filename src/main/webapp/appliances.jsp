@@ -13,15 +13,15 @@
         response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         return;
     }
-    
+
     // Fetch all appliances
     ApplianceDAO applianceDAO = new ApplianceDAO();
     RoomDAO roomDAO = new RoomDAO();
-    
+
     String roomIdParam = request.getParameter("roomId");
     List<Appliance> appliances;
     Room selectedRoom = null;
-    
+
     if (roomIdParam != null && !roomIdParam.isEmpty()) {
         int roomId = Integer.parseInt(roomIdParam);
         appliances = applianceDAO.getAppliancesByRoom(roomId);
@@ -29,9 +29,12 @@
     } else {
         appliances = applianceDAO.getAllAppliances();
     }
-    
+
     List<Room> allRooms = roomDAO.getAllRooms();
     DecimalFormat df = new DecimalFormat("#,##0.0");
+    
+    // Check if we're editing an appliance
+    Appliance applianceToEdit = (Appliance) request.getAttribute("appliance");
 %>
 <!DOCTYPE html>
 <html>
@@ -46,32 +49,9 @@
         <!-- Header with Navigation -->
         <header class="header">
             <div class="container">
-                <nav class="navbar">
-                    <a href="${pageContext.request.contextPath}/" class="navbar-brand">⚡ PowerSplit</a>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dashboard.jsp" class="nav-link">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/rooms.jsp" class="nav-link">Rooms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/appliances.jsp" class="nav-link active">Appliances</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/bills.jsp" class="nav-link">Bills</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/reports.jsp" class="nav-link">Reports</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/auth/logout" class="nav-link">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
+                <jsp:include page="/WEB-INF/includes/navbar.jsp" />
             </div>
         </header>
-
         <!-- Main Content -->
         <main class="main-content">
             <div class="container">
@@ -96,7 +76,7 @@
                             <select name="roomId" id="roomFilter" class="form-control" style="width: auto;" onchange="this.form.submit()">
                                 <option value="">All Rooms</option>
                                 <% for (Room room : allRooms) { %>
-                                    <option value="<%= room.getRoomId() %>" 
+                                    <option value="<%= room.getRoomId() %>"
                                         <%= (roomIdParam != null && roomIdParam.equals(String.valueOf(room.getRoomId()))) ? "selected" : "" %>>
                                         <%= room.getRoomName() %>
                                     </option>
@@ -162,16 +142,16 @@
                     <div class="card-header">💡 Common Appliance Wattage Reference</div>
                     <div class="card-body">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                            <div style="padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                            <div style="padding: 10px; background-color: primary; border-radius: 4px;">
                                 <strong>Lighting:</strong> LED Bulb: 10-15W, CFL: 15-20W, Tube Light: 40W
                             </div>
-                            <div style="padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                            <div style="padding: 10px; background-color: primary; border-radius: 4px;">
                                 <strong>Fans:</strong> Ceiling Fan: 70-80W, Table Fan: 50-60W
                             </div>
-                            <div style="padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                            <div style="padding: 10px; background-color: primary; border-radius: 4px;">
                                 <strong>Electronics:</strong> TV (LED): 80-120W, Laptop: 50-65W
                             </div>
-                            <div style="padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                            <div style="padding: 10px; background-color: primary; border-radius: 4px;">
                                 <strong>Cooling:</strong> AC (1.5 ton): 1500W, Refrigerator: 150-200W
                             </div>
                         </div>
@@ -190,20 +170,104 @@
         </footer>
     </div>
 
+    <!-- Add/Edit Appliance Modal -->
+    <div id="applianceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Appliance</h2>
+                <span class="close" onclick="closeApplianceModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="applianceForm" method="post" action="${pageContext.request.contextPath}/appliances">
+                    <input type="hidden" id="applianceId" name="applianceId">
+                    <input type="hidden" id="action" name="action" value="add">
+
+                    <div class="form-group">
+                        <label for="applianceName">Appliance Name *</label>
+                        <input type="text" id="applianceName" name="applianceName" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="roomId">Room *</label>
+                        <select id="roomId" name="roomId" class="form-control" required>
+                            <option value="">Select Room</option>
+                            <% for (Room room : allRooms) { %>
+                                <option value="<%= room.getRoomId() %>"><%= room.getRoomName() %></option>
+                            <% } %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wattage">Wattage (W) *</label>
+                        <input type="number" id="wattage" name="wattage" class="form-control" step="0.1" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status *</label>
+                        <select id="status" name="status" class="form-control" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeApplianceModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Appliance</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         function showAddApplianceForm() {
-            window.location.href = '${pageContext.request.contextPath}/applianceForm.jsp';
+            document.getElementById('modalTitle').textContent = 'Add New Appliance';
+            document.getElementById('applianceForm').reset();
+            document.getElementById('applianceId').value = '';
+            document.getElementById('action').value = 'add';
+            document.getElementById('applianceModal').classList.add('show');
+        }
+
+        function closeApplianceModal() {
+            document.getElementById('applianceModal').classList.remove('show');
         }
 
         function editAppliance(applianceId) {
-            window.location.href = '${pageContext.request.contextPath}/applianceForm.jsp?id=' + applianceId;
+            // Redirect to edit page that will populate the form
+            window.location.href = '${pageContext.request.contextPath}/appliances?action=edit&id=' + applianceId;
         }
 
         function deleteAppliance(applianceId) {
             if (confirm('Are you sure you want to delete this appliance?')) {
-                window.location.href = '${pageContext.request.contextPath}/appliance?action=delete&id=' + applianceId;
+                window.location.href = '${pageContext.request.contextPath}/appliances?action=delete&id=' + applianceId;
             }
         }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('applianceModal');
+            if (event.target == modal) {
+                closeApplianceModal();
+            }
+        }
+
+        // Populate modal for editing
+        <% if (applianceToEdit != null) { %>
+            document.getElementById('modalTitle').textContent = 'Edit Appliance';
+            document.getElementById('applianceId').value = '<%= applianceToEdit.getApplianceId() %>';
+            document.getElementById('applianceName').value = '<%= applianceToEdit.getApplianceName() %>';
+            document.getElementById('roomId').value = '<%= applianceToEdit.getRoomId() %>';
+            document.getElementById('wattage').value = '<%= applianceToEdit.getWattage() %>';
+            document.getElementById('description').value = '<%= applianceToEdit.getDescription() != null ? applianceToEdit.getDescription() : "" %>';
+            document.getElementById('status').value = '<%= applianceToEdit.getStatus() %>';
+            document.getElementById('action').value = 'update';
+            document.getElementById('applianceModal').classList.add('show');
+        <% } %>
     </script>
 </body>
 </html>
