@@ -1,6 +1,7 @@
 package com.OOPWebProject.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -156,8 +157,24 @@ public class RoomController extends HttpServlet {
     private void deleteRoom(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         int roomId = Integer.parseInt(request.getParameter("id"));
-        roomDAO.deleteRoom(roomId);
-        response.sendRedirect(request.getContextPath() + "/rooms?action=list&success=Room deleted successfully");
+        
+        try {
+            // Check if room has associated usage records
+            if (roomDAO.hasUsageRecords(roomId)) {
+                response.sendRedirect(request.getContextPath() + "/rooms?action=list&error=Cannot delete room with existing usage records");
+                return;
+            }
+            
+            roomDAO.deleteRoom(roomId);
+            response.sendRedirect(request.getContextPath() + "/rooms?action=list&success=Room deleted successfully");
+            
+        } catch (SQLException e) {
+            if (e.getMessage().contains("REFERENCE constraint")) {
+                response.sendRedirect(request.getContextPath() + "/rooms?action=list&error=Cannot delete room with existing usage records");
+            } else {
+                throw e;
+            }
+        }
     }
 
     private void getRoomJson(HttpServletRequest request, HttpServletResponse response)

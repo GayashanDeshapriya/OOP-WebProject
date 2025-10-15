@@ -130,6 +130,25 @@ public class RoomDAO {
     }
 
     /**
+     * Check if room has usage records
+     */
+    public boolean hasUsageRecords(int roomId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM usage_records WHERE room_id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, roomId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Get total room count
      */
     public int getTotalRoomsCount() throws SQLException {

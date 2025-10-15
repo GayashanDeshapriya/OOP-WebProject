@@ -40,6 +40,26 @@
                     <p class="text-secondary">Add, edit, and manage boarding rooms</p>
                 </div>
 
+                <!-- Error/Success Messages -->
+                <%
+                    String error = request.getParameter("error");
+                    String success = request.getParameter("success");
+                    if (error != null) {
+                %>
+                <div class="alert alert-danger">
+                    <%= error %>
+                </div>
+                <%
+                    }
+                    if (success != null) {
+                %>
+                <div class="alert alert-success">
+                    <%= success %>
+                </div>
+                <%
+                    }
+                %>
+
                 <!-- Add New Room Button -->
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
