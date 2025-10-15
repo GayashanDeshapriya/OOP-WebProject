@@ -214,7 +214,7 @@
                         <div class="d-flex gap-md flex-wrap">
                             <button class="btn btn-outline" onclick="window.print()">🖨️ Print Report</button>
                             <button class="btn btn-outline" onclick="alert('CSV export feature coming soon!')">📊 Export to CSV</button>
-                            <button class="btn btn-outline" onclick="alert('PDF export feature coming soon!')">📄 Export to PDF</button>
+                            <button class="btn btn-outline" onclick="exportToPdf()">📄 Export to PDF</button>
                         </div>
                     </div>
                 </div>
@@ -230,5 +230,50 @@
             </div>
         </footer>
     </div>
+
+    <script>
+        function exportToPdf() {
+            // Show loading state
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '⏳ Generating PDF...';
+            button.disabled = true;
+            
+            try {
+                // Create a temporary link to download the PDF
+                const link = document.createElement('a');
+                link.href = '${pageContext.request.contextPath}/exportPdf';
+                link.download = 'electricity_report.pdf';
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                
+                // Add error handling for the download
+                link.onerror = function() {
+                    alert('Error downloading PDF. Please try again.');
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    document.body.removeChild(link);
+                };
+                
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show success message
+                setTimeout(() => {
+                    button.innerHTML = '✅ PDF Generated';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }, 1000);
+                }, 1000);
+                
+            } catch (error) {
+                console.error('PDF export error:', error);
+                alert('Error generating PDF. Please try again.');
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
