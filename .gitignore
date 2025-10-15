@@ -23,6 +23,8 @@
 hs_err_pid*
 replay_pid*
 
+# Database configuration with credentials
+src/main/java/com/OOPWebProject/util/DBUtil.java
 
 
 
